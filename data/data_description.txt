@@ -1,4 +1,4 @@
-MSSubClass: Identifies the type of dwelling involved in the sale.	
+MSSubClass: Identifies the type of dwelling(주거) involved in the sale.
 
         20	1-STORY 1946 & NEWER ALL STYLES
         30	1-STORY 1945 & OLDER
@@ -28,7 +28,7 @@ MSZoning: Identifies the general zoning classification of the sale.
        RP	Residential Low Density Park 
        RM	Residential Medium Density
 	
-LotFrontage: Linear feet of street connected to property
+LotFrontage: Linear feet of street connected to property (대로 또는 진입로에 인접하는 로트 또는 소포 측면을 의미???)
 
 LotArea: Lot size in square feet
 
@@ -37,10 +37,10 @@ Street: Type of road access to property
        Grvl	Gravel	
        Pave	Paved
        	
-Alley: Type of alley access to property
+Alley: Type of alley access to property :  small street in between buildings
 
-       Grvl	Gravel
-       Pave	Paved
+       Grvl	Gravel -> 비포장(자갈)
+       Pave	Paved -> 포장된
        NA 	No alley access
 		
 LotShape: General shape of property
