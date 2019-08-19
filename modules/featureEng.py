@@ -92,7 +92,7 @@ class DummyMaker(TransformerMixin):
         return self
     
     def transform(self, df):
-        pd.get_dummies(data=df, columns=categorical_columns)        
+        df = pd.get_dummies(data=df, columns=categorical_columns)        
         return df
     
 class Featuredropper(TransformerMixin):
@@ -108,7 +108,7 @@ class Featuredropper(TransformerMixin):
         df.drop(c_drop_feature, axis=1, inplace=True)
         return df    
 
-def pre_processing(train_df, test_df):
+def pre_processing(train_df, result_df, test_df):
     pre_pipeline = Pipeline([
         ('nullFiller', NullFiller()),
         ('imputator', Imputator()),
@@ -123,5 +123,6 @@ def pre_processing(train_df, test_df):
     all_df = pre_pipeline.transform(all_df)
     train_df = all_df.iloc[:train_length]
     test_df = all_df.iloc[train_length:]
+    result_df = np.log1p(result_df)
     
-    return train_df, test_df
+    return train_df, result_df, test_df
