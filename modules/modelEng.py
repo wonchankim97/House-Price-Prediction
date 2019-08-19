@@ -7,7 +7,7 @@ from sklearn.metrics import mean_squared_error, make_scorer
 
 def get_param(model):
     cv = 5
-    n_jobs = 2
+    n_jobs = 8
     verbose = 1
     scoring = make_scorer(mean_squared_error, greater_is_better=False)
     
@@ -19,7 +19,7 @@ def get_param(model):
     elif type(model).__name__ == 'RandomForestRegressor':
         params = {'max_depth': [3, 4, 5],
                   'min_samples_leaf': [3, 4, 5],
-                  'n_estimators': [10,15,20]}
+                  'n_estimators': [700,1000,1460]}
         return cv, n_jobs, verbose, scoring, params
     elif type(model).__name__ == 'Lasso':
         params = {'alpha': [0.0005],
@@ -39,14 +39,14 @@ def get_param(model):
                   'subsample': [0.9],
                   'colsample_bytree': [0.5],
                   'silent': [True],                  
-                  'n_estimators':[1000],
+                  'n_estimators':[3000],
                   'refit' : [True]}
         return cv, n_jobs, verbose, scoring, params
     elif type(model).__name__ == 'LGBMRegressor':
         params = {'objective':['regression'],
                   'num_leave' : [1],
                   'learning_rate' : [0.05],
-                  'n_estimators':[1000],
+                  'n_estimators':[3000],
                   'max_bin' : [80],                  
                   'refit':[True]}
         return cv, n_jobs, verbose, scoring, params
