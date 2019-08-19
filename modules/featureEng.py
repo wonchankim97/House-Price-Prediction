@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from scipy import stats
+from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline, TransformerMixin
 
 categorical_columns = ['Neighborhood','MSZoning','Street','LotShape','LotConfig','Condition2','MasVnrType','ExterQual','ExterCond','Foundation','BsmtQual','BsmtCond','BsmtExposure','Heating','CentralAir','Electrical','KitchenQual','FireplaceQu','GarageType','GarageFinish','GarageQual','SaleType','SaleCondition','GarageYrBltImputed']
@@ -76,6 +77,11 @@ class Standarizer(TransformerMixin):
         df['GrLivArea'] = stats.boxcox(df['GrLivArea'])[0]
         df['LotArea'] = stats.boxcox(df['LotArea'])[0]
         df['LotFrontage'] = stats.boxcox(df['LotFrontage'])[0]  
+        
+        scaler = StandardScaler()
+        df['BsmtUnfSF'] = scaler.fit_transform(df[['BsmtUnfSF']])
+        df['TotalBsmtSF'] = scaler.fit_transform(df[['TotalBsmtSF']])
+        df['BsmtFinSF1'] = scaler.fit_transform(df[['BsmtFinSF1']])
         return df  
 
 class OrdinalConverter(TransformerMixin):
