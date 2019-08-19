@@ -40,7 +40,7 @@ class NullFiller(TransformerMixin):
         df['GarageYrBltImputed'] = np.where(df['GarageYrBlt'].isnull(), 1, 0)
 
         # impute the missing years with the value of the year built plus the mean of the diff of year built and garageyrbuilt
-        aveDiff = np.mean(df['GarageYrBlt']-df['YearBuilt'])
+        aveDiff = round(np.mean(df['GarageYrBlt']-df['YearBuilt']))
         df['GarageYrBlt'].fillna(df['YearBuilt'] + aveDiff,inplace=True)
         
         # added for test data
