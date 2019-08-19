@@ -7,7 +7,7 @@ from sklearn.metrics import mean_squared_error, make_scorer
 
 def get_param(model):
     cv = 5
-    n_jobs = -1
+    n_jobs = 2
     verbose = 1
     scoring = make_scorer(mean_squared_error, greater_is_better=False)
     
@@ -26,12 +26,29 @@ def get_param(model):
                  "normalize": [False]}
         return cv, n_jobs, verbose, scoring, params
     elif type(model).__name__ == 'Ridge':
-        params = {'alpha': [10.5, 10.6]}
+        params = {'alpha': [10, 11]}
         return cv, n_jobs, verbose, scoring, params
     elif type(model).__name__ == 'SVR':
         params = {'gamma': ['scale'],
-                 'C': [100000],
+                 'C': [10000],
                  'epsilon': [0.1]}
+        return cv, n_jobs, verbose, scoring, params
+    elif type(model).__name__ == 'XGBRegressor':
+        params = {'learning_rate': [0.05],
+                  'max_depth': [5],
+                  'subsample': [0.9],
+                  'colsample_bytree': [0.5],
+                  'silent': [True],                  
+                  'n_estimators':[1000],
+                  'refit' : [True]}
+        return cv, n_jobs, verbose, scoring, params
+    elif type(model).__name__ == 'LGBMRegressor':
+        params = {'objective':['regression'],
+                  'num_leave' : [1],
+                  'learning_rate' : [0.05],
+                  'n_estimators':[1000],
+                  'max_bin' : [80],                  
+                  'refit':[True]}
         return cv, n_jobs, verbose, scoring, params
 
 def grid_search(train_X, train_Y, model):
