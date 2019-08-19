@@ -110,8 +110,11 @@ class Featuredropper(TransformerMixin):
         n_drop_feature = ['BsmtFinSF2','LowQualFinSF','EnclosedPorch','3SsnPorch','PoolArea','MiscVal']
         # categorical variable chi^2 p-value >0.05
         c_drop_feature = ['MSSubClass','Alley','LandContour','Utilities','LandSlope','Condition1','BldgType','HouseStyle','RoofStyle','RoofMatl','Exterior1st','Exterior2nd','BsmtFinType1','BsmtFinType2','HeatingQC','Functional','GarageCond','PavedDrive','PoolQC','Fence','MiscFeature']
+        custom_drop_feature = ['GarageYrBltImputed']
+        
         df.drop(n_drop_feature, axis=1, inplace=True)
         df.drop(c_drop_feature, axis=1, inplace=True)
+        #df.drop(custom_drop_feature, axis=1, inplace=True)
         return df    
 
 def pre_processing(train_df, result_df, test_df):
