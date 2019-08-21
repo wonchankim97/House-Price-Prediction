@@ -14,8 +14,8 @@ def get_param(model):
     class_name = type(model).__name__ 
     
     if class_name == 'ElasticNet':        
-        params = {'alpha': [0.0007],
-                  'l1_ratio': [0.7],
+        params = {'alpha': [0.0006,0.0007,0.0008,0.0009],
+                  'l1_ratio': [0.5, 0.6,0.7,0.8],
                   'max_iter': [10000]}
         return cv, n_jobs, verbose, scoring, params
     elif class_name == 'RandomForestRegressor':
@@ -24,34 +24,39 @@ def get_param(model):
                   'n_estimators': [700,1000,1460]}
         return cv, n_jobs, verbose, scoring, params
     elif class_name == 'Lasso':
-        params = {'alpha': [0.0005],
+        params = {'alpha': [0.0001, 0.0002, 0.0003, 0.0004, 0.0005, 0.0006, 0.0007, 0.0008],
                  "normalize": [False]}
         return cv, n_jobs, verbose, scoring, params
     elif class_name == 'Ridge':
-        params = {'alpha': [10, 11]}
+        params = {'alpha': [1,2,3,4,5,6,7,8]}
         return cv, n_jobs, verbose, scoring, params
     elif class_name == 'SVR':
         params = {'gamma': ['scale'],
-                 'C': [20000],
-                 'epsilon': [0.0001, 0.001, 0.01]}
+                 'C': [55000,56000,57000],
+                 'epsilon': [0.02,0.021,0.022,0.023,0.024],
+                 'kernel':['rbf']}
         return cv, n_jobs, verbose, scoring, params
     elif class_name == 'XGBRegressor':
         params = {'learning_rate': [0.01],
-                  'min_child_weight':[3],
-                  'max_depth': [3],
-                  'gamma':[0],
+                  'min_child_weight':[0,1],
+                  'max_depth': [5],
+                  'gamma':[0,1],
                   'subsample': [0.7],
-                  'colsample_bytree': [0.6],
+                  'colsample_bytree': [0.7],
                   'silent': [True],                  
                   'n_estimators':[4000],
-                  'refit' : [True]}        
+                  'refit' : [True]}
         return cv, n_jobs, verbose, scoring, params
     elif class_name == 'LGBMRegressor':
         params = {'objective':['regression'],
                   'num_leave' : [1],
                   'learning_rate' : [0.01],
+                  'num_iterations' : [100],
                   'n_estimators':[3500],
-                  'max_bin' : [800],                  
+                  'max_bin' : [1000],    
+                  'max_depth' : [9],
+                  'num_leaves': [300],
+                  'bagging_seed': [3],
                   'refit':[True]}
         return cv, n_jobs, verbose, scoring, params
 
