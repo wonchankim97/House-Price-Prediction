@@ -14,8 +14,8 @@ def get_param(model):
     class_name = type(model).__name__ 
     
     if class_name == 'ElasticNet':        
-        params = {'alpha': [0.0003, 0.0004, 0.0005],
-                  'l1_ratio': [0.9, 0.95, 0.99, 1],
+        params = {'alpha': [0.0007],
+                  'l1_ratio': [0.7],
                   'max_iter': [10000]}
         return cv, n_jobs, verbose, scoring, params
     elif class_name == 'RandomForestRegressor':
@@ -32,24 +32,26 @@ def get_param(model):
         return cv, n_jobs, verbose, scoring, params
     elif class_name == 'SVR':
         params = {'gamma': ['scale'],
-                 'C': [10000],
-                 'epsilon': [0.1]}
+                 'C': [20000],
+                 'epsilon': [0.0001, 0.001, 0.01]}
         return cv, n_jobs, verbose, scoring, params
     elif class_name == 'XGBRegressor':
-        params = {'learning_rate': [0.05],
-                  'max_depth': [5],
-                  'subsample': [0.9],
-                  'colsample_bytree': [0.5],
+        params = {'learning_rate': [0.01],
+                  'min_child_weight':[3],
+                  'max_depth': [3],
+                  'gamma':[0],
+                  'subsample': [0.7],
+                  'colsample_bytree': [0.6],
                   'silent': [True],                  
-                  'n_estimators':[3000],
-                  'refit' : [True]}
+                  'n_estimators':[4000],
+                  'refit' : [True]}        
         return cv, n_jobs, verbose, scoring, params
     elif class_name == 'LGBMRegressor':
         params = {'objective':['regression'],
                   'num_leave' : [1],
-                  'learning_rate' : [0.05],
-                  'n_estimators':[3000],
-                  'max_bin' : [80],                  
+                  'learning_rate' : [0.01],
+                  'n_estimators':[3500],
+                  'max_bin' : [800],                  
                   'refit':[True]}
         return cv, n_jobs, verbose, scoring, params
 
