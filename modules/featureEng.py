@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
 from scipy import stats, special
-from scipy.special import boxcox1p
 from sklearn.preprocessing import StandardScaler, RobustScaler, LabelEncoder
 from sklearn.pipeline import Pipeline, TransformerMixin
 
@@ -113,18 +112,18 @@ class Imputator(TransformerMixin):
         df['TotRmsAbvGrd'] = df['TotRmsAbvGrd'].astype(str)
         df['Fireplaces'] = df['Fireplaces'].astype(str)
         df['GarageCars'] = df['GarageCars'].astype(str)
-        
         '''
-        df['PoolQC'] = df.apply(lambda x:1 if x['PoolQC']=='NA' else 0, axis=1).astype(str)
+        df['PoolQC'] = df.apply(lambda x:1 if x['PoolQC']=='Ex' else 0, axis=1).astype(str)
         df['SaleCondition'] = df.apply(lambda x:1 if x['SaleCondition']=='Partial' else 0, axis=1).astype(str)
         df['SaleType'] = df.apply(lambda x:1 if (x['SaleType']=='New') | (x['SaleType']=='Con') else 0, axis=1).astype(str)
+        
         df['FireplaceQu'] = df.apply(lambda x:1 if x['FireplaceQu']=='Ex' else 0, axis=1).astype(str)
         df['KitchenQual'] = df.apply(lambda x:1 if x['KitchenQual']=='Ex' else 0, axis=1).astype(str)
         df['Condition2'] = df.apply(lambda x:1 if x['Condition2']=='Norm' else 0, axis=1).astype(str)
         df['ExterQual'] = df.apply(lambda x:1 if x['ExterQual']=='Ex' else 0, axis=1).astype(str)
         df['Heating'] = df.apply(lambda x:1 if (x['Heating']=='GasA') | (x['Heating']=='GasW') else 0, axis=1).astype(str)
         df['HeatingQC'] = df.apply(lambda x:1 if x['HeatingQC']=='Ex' else 0, axis=1).astype(str)
-        #df['porch'] = df.apply(lambda x: 1 if (x['OpenPorchSF']>0) | (x['EnclosedPorch']>0) | (x['3SsnPorch']>0) | (x['ScreenPorch']>0) else 0, axis=1).astype(str)
+        df['porch'] = df.apply(lambda x: 1 if (x['OpenPorchSF']>0) | (x['EnclosedPorch']>0) | (x['3SsnPorch']>0) | (x['ScreenPorch']>0) else 0, axis=1).astype(str)
         
         df['houseareaSF'] = df['BsmtFinSF1']+df['BsmtFinSF2']+df['1stFlrSF']+df['2ndFlrSF']-df['LowQualFinSF']
 
@@ -205,8 +204,8 @@ class Featuredropper(TransformerMixin):
         #df.drop(n_drop_feature, axis=1, inplace=True)
         #df.drop(c_drop_feature, axis=1, inplace=True)
         #df.drop(custom_categorical_columns, axis=1, inplace=True)
-        #,'OpenPorchSF','EnclosedPorch','3SsnPorch','ScreenPorch'
-        df.drop(['Neighborhood','BsmtFinSF1','BsmtFinSF2','1stFlrSF','2ndFlrSF','LowQualFinSF'], axis=1, inplace=True)
+        #,'Neighborhood','OpenPorchSF','EnclosedPorch','3SsnPorch','ScreenPorch'
+        df.drop(['BsmtFinSF2','2ndFlrSF','LowQualFinSF','OpenPorchSF'], axis=1, inplace=True)
         return df   
     
 def pre_processing(train_df, result_df, test_df):

@@ -31,33 +31,33 @@ def get_param(model):
         params = {'alpha': [1,2,3,4,5,6,7,8]}
         return cv, n_jobs, verbose, scoring, params
     elif class_name == 'SVR':
-        params = {'gamma': ['scale'],
-                 'C': [55000,56000,57000],
-                 'epsilon': [0.02,0.021,0.022,0.023,0.024],
+        params = {'gamma': [1e-06, 1e-07, 1e-08, 2e-08],
+                 'C': [70000,80000],
+                 'epsilon': [0.1, 0.2],
                  'kernel':['rbf']}
         return cv, n_jobs, verbose, scoring, params
     elif class_name == 'XGBRegressor':
         params = {'learning_rate': [0.01],
-                  'min_child_weight':[0,1],
-                  'max_depth': [5],
-                  'gamma':[0,1],
-                  'subsample': [0.7],
-                  'colsample_bytree': [0.7],
-                  'silent': [True],                  
-                  'n_estimators':[4000],
-                  'refit' : [True]}
+                 'n_estimators': [3500],
+                 'max_depth': [3],
+                 'min_child_weight': [0],
+                 'gamma': [0],
+                 'subsample': [0.6,0.7],
+                 'colsample_bytree': [0.6,0.7],
+                 'objective': ['reg:linear'],
+                 'scale_pos_weight': [1],
+                 'seed': [25, 30],
+                 'reg_alpha': [0.00005,0.00007]}
         return cv, n_jobs, verbose, scoring, params
     elif class_name == 'LGBMRegressor':
-        params = {'objective':['regression'],
-                  'num_leave' : [1],
-                  'learning_rate' : [0.01],
-                  'num_iterations' : [100],
-                  'n_estimators':[3500],
-                  'max_bin' : [1000],    
-                  'max_depth' : [9],
-                  'num_leaves': [300],
-                  'bagging_seed': [3],
-                  'refit':[True]}
+        params = {'objective': ['regression'],
+                  'num_leaves': [70,60,80],
+                  'max_depth': [3,4,5],
+                  'bagging_seed': [0,1],
+                  'max_bin':[10,20,30],
+                  'sub_feature':[0.4,0.5,0.6],
+                  'matric':['binary_logloss'],
+                  'num_iterations':[300,500]}
         return cv, n_jobs, verbose, scoring, params
 
 def grid_search(train_X, train_Y, model):
