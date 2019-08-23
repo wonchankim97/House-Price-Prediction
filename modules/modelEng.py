@@ -14,7 +14,7 @@ def get_param(model):
     class_name = type(model).__name__ 
     
     if class_name == 'ElasticNet':        
-        params = {'alpha': [0.0006,0.0007,0.0008,0.0009],
+        params = {'alpha': [0.0004,0.0005,0.0006,0.0007,0.0008,0.0009],
                   'l1_ratio': [0.5, 0.6,0.7,0.8],
                   'max_iter': [10000]}
         return cv, n_jobs, verbose, scoring, params
