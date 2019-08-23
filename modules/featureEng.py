@@ -40,6 +40,9 @@ class NullFiller(TransformerMixin):
         ## Alley : convert NaN => NA
         df['Alley'].fillna('NA',inplace=True)
         ## LotFrontage : convert NaN => ???? 
+        # <CASE1> Using lotarea
+        df['LotFrontage'].fillna(df['LotArea'] *0.007206024910841549,inplace=True)
+        '''
         # <CASE2> Using Neighborhood 
         df_tmp = df[~df.LotFrontage.isnull()]
         df_md_lotfrontage = df_tmp.groupby('Neighborhood').agg('median')[{'LotFrontage'}]
@@ -48,13 +51,14 @@ class NullFiller(TransformerMixin):
         df = pd.concat([df.reset_index(drop=True).set_index('Neighborhood'),df_md_lotfrontage], axis=1, join='inner').reset_index()
         df['LotFrontage'].fillna(df['mdLotFrontage'],inplace=True)
         df = df.drop(columns=['mdLotFrontage'])
-
+        '''
+        
         # Alyssa
         # fill in for masonry stuff with None and 0
         df['MasVnrType'].fillna('None',inplace=True)
         df['MasVnrArea'].fillna(0,inplace=True)
-        #df.loc[949,'BsmtExposure'] = 'No' # impute the ID949's BsmtExposure with the mode of 'BsmtExposure'
-        df['BsmtExposure'] = df.apply(lambda x:'No' if pd.isnull(x['BsmtExposure']) else x['BsmtExposure'], axis=1) # Generalization
+        df.loc[949,'BsmtExposure'] = 'No' # impute the ID949's BsmtExposure with the mode of 'BsmtExposure'
+        #df['BsmtExposure'] = df.apply(lambda x:'No' if pd.isnull(x['BsmtExposure']) else x['BsmtExposure'], axis=1) # Generalization
 
         # Kisoo
         df.FireplaceQu.fillna('NA',inplace=True) # without Fireplace, there is no FireplaceQu.
@@ -66,7 +70,14 @@ class NullFiller(TransformerMixin):
 
         # impute the missing years with the value of the year built plus the mean of the diff of year built and garageyrbuilt
         aveDiff = round(np.mean(df['GarageYrBlt']-df['YearBuilt']))
-        df['GarageYrBlt'].fillna(df['YearBuilt'] + aveDiff,inplace=True)
+        #df['GarageYrBlt'].fillna(df['YearBuilt'] + aveDiff,inplace=True)
+        df['GarageYrBlt'].fillna(0, inplace=True)
+        
+        df['MSZoning'].fillna(df['MSZoning'].mode()[0],inplace=True)
+        df['KitchenQual'].fillna(df['KitchenQual'].mode()[0],inplace=True)
+        df['Exterior1st'].fillna(df['Exterior1st'].mode()[0],inplace=True)
+        df['Exterior2nd'].fillna(df['Exterior2nd'].mode()[0],inplace=True)
+        df['SaleType'].fillna(df['SaleType'].mode()[0],inplace=True)
         
         # added for test data
         df['BsmtQual'].fillna('NA',inplace=True)
@@ -133,7 +144,7 @@ class Imputator(TransformerMixin):
         df['3SsnPorch'] = df.apply(lambda x:1 if x['3SsnPorch']>0 else 0, axis=1).astype(str)
         df['EnclosedPorch'] = df.apply(lambda x:1 if x['EnclosedPorch']>0 else 0, axis=1).astype(str)
         df['ScreenPorch'] = df.apply(lambda x:1 if x['ScreenPorch']>0 else 0, axis=1).astype(str)
-        
+
         df['BsmtQual'] = df.apply(lambda x:1 if x['BsmtQual']=='Ex' else 0, axis=1).astype(str)
         df['RoofMatl'] = df.apply(lambda x:1 if x['RoofMatl']=='WdShngl' else 0, axis=1).astype(str)
         df['neighbor'] = [str([i for i,n in enumerate(neighbor) if x in n][0]) for x in df.Neighborhood]
@@ -171,6 +182,21 @@ class OrdinalConverter(TransformerMixin):
         return self
     
     def transform(self, df):
+        """
+        ordinals = {
+            "ExterCond": {"Ex": 4, "Gd": 3, "TA": 2, "Fa": 1, "Po": 0},
+            "ExterQual": {"Ex": 4, "Gd": 3, "TA": 2, "Fa": 1, "Po": 0},
+            "BsmtQual": {"Ex": 5, "Gd": 4, "TA": 3, "Fa": 2, "Po": 1, "NA": 0},
+            "BsmtCond": {"Ex": 5, "Gd": 4, "TA": 3, "Fa": 2, "Po": 1, "NA": 0},
+            "BsmtExposure": {"Gd": 4, "Av": 3, "Mn": 2, "No": 1, "NA": 0},
+            "HeatingQC": {"Ex": 4, "Gd": 3, "TA": 2, "Fa": 1, "Po": 0},
+            "KitchenQual": {"Ex": 4, "Gd": 3, "TA": 2, "Fa": 1, "Po": 0},
+            "Functional": {"Typ": 7, "Min1": 6, "Min2": 5, "Mod": 4, "Maj1": 3, "Maj2": 2, "Sev": 1, "Sal": 0},
+            "GarageCond": {"Ex": 5, "Gd": 4, "TA": 3, "Fa": 2, "Po": 1, "NA": 0},
+        }
+        
+        df.replace(ordinals, inplace=True)
+        """
         for i in ordinal_columms:
             label_enc = LabelEncoder() 
             label_enc.fit(list(df[i].values)) 
@@ -193,6 +219,7 @@ class DummyMaker(TransformerMixin):
         #df = pd.get_dummies(data = df, columns = onehot_categorical_columns)
         #df = pd.get_dummies(data = df, columns = ['BsmtQual','RoofMatl','neighbor'])
         df = pd.get_dummies(df)
+        #df.drop(['MSSubClass_150','MSZoning_C (all)','Exterior1st_AsphShn','Exterior1st_CBlock','Exterior1st_Stone','Exterior1st_ImStucc','Exterior2nd_Other','Electrical_Mix','MiscFeature_TenC'], axis=1, inplace=True)
         return df
     
 class Featuredropper(TransformerMixin):
@@ -205,7 +232,7 @@ class Featuredropper(TransformerMixin):
         #df.drop(c_drop_feature, axis=1, inplace=True)
         #df.drop(custom_categorical_columns, axis=1, inplace=True)
         #,'Neighborhood','OpenPorchSF','EnclosedPorch','3SsnPorch','ScreenPorch'
-        df.drop(['BsmtFinSF2','2ndFlrSF','LowQualFinSF','OpenPorchSF'], axis=1, inplace=True)
+        df.drop(['Utilities','BsmtFinSF2','2ndFlrSF','LowQualFinSF','OpenPorchSF'], axis=1, inplace=True)
         return df   
     
 def pre_processing(train_df, result_df, test_df):

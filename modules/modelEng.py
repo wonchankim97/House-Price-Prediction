@@ -14,9 +14,9 @@ def get_param(model):
     class_name = type(model).__name__ 
     
     if class_name == 'ElasticNet':        
-        params = {'alpha': [0.0006,0.0007,0.0008,0.0009],
-                  'l1_ratio': [0.5, 0.6,0.7,0.8],
-                  'max_iter': [10000]}
+        params = {'alpha': [0.0003,0.0004,0.0005],
+                  'l1_ratio': [0.95, 0.97, 0.99],
+                  'max_iter': [1000]}
         return cv, n_jobs, verbose, scoring, params
     elif class_name == 'RandomForestRegressor':
         params = {'max_depth': [3, 4, 5],
@@ -25,14 +25,16 @@ def get_param(model):
         return cv, n_jobs, verbose, scoring, params
     elif class_name == 'Lasso':
         params = {'alpha': [0.0001, 0.0002, 0.0003, 0.0004, 0.0005, 0.0006, 0.0007, 0.0008],
-                 "normalize": [False]}
+                 'normalize': [True,False],
+                 'max_iter': [5000,10000]}
         return cv, n_jobs, verbose, scoring, params
     elif class_name == 'Ridge':
-        params = {'alpha': [1,2,3,4,5,6,7,8]}
+        params = {'alpha': [5,6,7,8,9,10,10.2,10.4,10.6,10.8,11],
+                 'max_iter': [5000,10000]}
         return cv, n_jobs, verbose, scoring, params
     elif class_name == 'SVR':
         params = {'gamma': [1e-06, 1e-07, 1e-08, 2e-08],
-                 'C': [70000,80000],
+                 'C': [80000,90000,100000],
                  'epsilon': [0.1, 0.2],
                  'kernel':['rbf']}
         return cv, n_jobs, verbose, scoring, params
@@ -47,7 +49,7 @@ def get_param(model):
                  'objective': ['reg:linear'],
                  'scale_pos_weight': [1],
                  'seed': [25, 30],
-                 'reg_alpha': [0.00005,0.00007]}
+                 'reg_alpha': [0.00004,0.00005]}
         return cv, n_jobs, verbose, scoring, params
     elif class_name == 'LGBMRegressor':
         params = {'objective': ['regression'],
