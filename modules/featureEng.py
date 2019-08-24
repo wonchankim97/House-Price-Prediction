@@ -53,8 +53,8 @@ class NullFiller(TransformerMixin):
         # fill in for masonry stuff with None and 0
         df['MasVnrType'].fillna('None',inplace=True)
         df['MasVnrArea'].fillna(0,inplace=True)
-        #df.loc[949,'BsmtExposure'] = 'No' # impute the ID949's BsmtExposure with the mode of 'BsmtExposure'
-        df['BsmtExposure'] = df.apply(lambda x:'No' if pd.isnull(x['BsmtExposure']) else x['BsmtExposure'], axis=1) # Generalization
+        df.loc[949,'BsmtExposure'] = 'No' # impute the ID949's BsmtExposure with the mode of 'BsmtExposure'
+        #df['BsmtExposure'] = df.apply(lambda x:'No' if pd.isnull(x['BsmtExposure']) else x['BsmtExposure'], axis=1) # Generalization
 
         # Kisoo
         df.FireplaceQu.fillna('NA',inplace=True) # without Fireplace, there is no FireplaceQu.
@@ -67,6 +67,14 @@ class NullFiller(TransformerMixin):
         # impute the missing years with the value of the year built plus the mean of the diff of year built and garageyrbuilt
         aveDiff = round(np.mean(df['GarageYrBlt']-df['YearBuilt']))
         df['GarageYrBlt'].fillna(df['YearBuilt'] + aveDiff,inplace=True)
+        #df['GarageYrBlt'].fillna(0, inplace=True)
+        
+        df['MSZoning'].fillna(df['MSZoning'].mode()[0],inplace=True)
+        df['KitchenQual'].fillna(df['KitchenQual'].mode()[0],inplace=True)
+        df['Exterior1st'].fillna(df['Exterior1st'].mode()[0],inplace=True)
+        df['Exterior2nd'].fillna(df['Exterior2nd'].mode()[0],inplace=True)
+        df['SaleType'].fillna(df['SaleType'].mode()[0],inplace=True)
+
         
         # added for test data
         df['BsmtQual'].fillna('NA',inplace=True)
@@ -95,44 +103,45 @@ class Imputator(TransformerMixin):
         df['YrSold'] = df['YrSold'].astype(str)
         df['MoSold'] = df['MoSold'].astype(str)
         
-        #df['GarageYrBlt'] = df['GarageYrBlt'].astype(str)
+        df['GarageYrBlt'] = df['GarageYrBlt'].astype(str)
         #df['YearBuilt'] = df['YearBuilt'].astype(str)
         #df['YearRemodAdd'] = df['YearRemodAdd'].astype(str)
         df['MSSubClass'] = df['MSSubClass'].astype(str)
         
         #df['OverallQual'] = df['OverallQual'].astype(str)
-        df['OverallCond'] = df['OverallCond'].astype(str)
-        '''
-        df['BsmtFullBath'] = df['BsmtFullBath'].astype(str)
-        df['BsmtHalfBath'] = df['BsmtHalfBath'].astype(str)
-        df['FullBath'] = df['FullBath'].astype(str)
-        df['HalfBath'] = df['HalfBath'].astype(str)
+        #df['OverallCond'] = df['OverallCond'].astype(str)
+        
+
+#         df['BsmtFullBath'] = df['BsmtFullBath'].astype(str)
+#         df['BsmtHalfBath'] = df['BsmtHalfBath'].astype(str)
+#         df['FullBath'] = df['FullBath'].astype(str)
+#         df['HalfBath'] = df['HalfBath'].astype(str)
         df['BedroomAbvGr'] = df['BedroomAbvGr'].astype(str)
         df['KitchenAbvGr'] = df['KitchenAbvGr'].astype(str)
-        df['TotRmsAbvGrd'] = df['TotRmsAbvGrd'].astype(str)
-        df['Fireplaces'] = df['Fireplaces'].astype(str)
-        df['GarageCars'] = df['GarageCars'].astype(str)
+#         df['TotRmsAbvGrd'] = df['TotRmsAbvGrd'].astype(str)
+#         df['Fireplaces'] = df['Fireplaces'].astype(str)
+#         df['GarageCars'] = df['GarageCars'].astype(str)
         '''
         df['PoolQC'] = df.apply(lambda x:1 if x['PoolQC']=='Ex' else 0, axis=1).astype(str)
-        df['SaleCondition'] = df.apply(lambda x:1 if x['SaleCondition']=='Partial' else 0, axis=1).astype(str)
+        df['SaleCondition'] = df.apply(lambda x:1 if x['SaleCondition']=='Partial' else 0, axis=1).astype(str)        
         df['SaleType'] = df.apply(lambda x:1 if (x['SaleType']=='New') | (x['SaleType']=='Con') else 0, axis=1).astype(str)
-        
+        '''
         df['FireplaceQu'] = df.apply(lambda x:1 if x['FireplaceQu']=='Ex' else 0, axis=1).astype(str)
         df['KitchenQual'] = df.apply(lambda x:1 if x['KitchenQual']=='Ex' else 0, axis=1).astype(str)
         df['Condition2'] = df.apply(lambda x:1 if x['Condition2']=='Norm' else 0, axis=1).astype(str)
-        df['ExterQual'] = df.apply(lambda x:1 if x['ExterQual']=='Ex' else 0, axis=1).astype(str)
+        #df['ExterQual'] = df.apply(lambda x:1 if x['ExterQual']=='Ex' else 0, axis=1).astype(str)
         df['Heating'] = df.apply(lambda x:1 if (x['Heating']=='GasA') | (x['Heating']=='GasW') else 0, axis=1).astype(str)
         df['HeatingQC'] = df.apply(lambda x:1 if x['HeatingQC']=='Ex' else 0, axis=1).astype(str)
-        df['porch'] = df.apply(lambda x: 1 if (x['OpenPorchSF']>0) | (x['EnclosedPorch']>0) | (x['3SsnPorch']>0) | (x['ScreenPorch']>0) else 0, axis=1).astype(str)
+        #df['porch'] = df.apply(lambda x: 1 if (x['OpenPorchSF']>0) | (x['EnclosedPorch']>0) | (x['3SsnPorch']>0) | (x['ScreenPorch']>0) else 0, axis=1).astype(str)
         
-        df['houseareaSF'] = df['BsmtFinSF1']+df['BsmtFinSF2']+df['1stFlrSF']+df['2ndFlrSF']-df['LowQualFinSF']
+        df['houseareaSF'] = df['BsmtFinSF1']+df['BsmtFinSF2']+df['1stFlrSF']+df['2ndFlrSF']
 
-        df['PoolArea'] = df.apply(lambda x:1 if x['PoolArea']>0 else 0, axis=1).astype(str)
+        #df['PoolArea'] = df.apply(lambda x:1 if x['PoolArea']>0 else 0, axis=1).astype(str)
         df['MiscVal'] = df.apply(lambda x:1 if x['MiscVal']>0 else 0, axis=1).astype(str)
-        df['LowQualFinSF'] = df.apply(lambda x:1 if x['LowQualFinSF']>0 else 0, axis=1).astype(str)
+        #df['LowQualFinSF'] = df.apply(lambda x:1 if x['LowQualFinSF']>0 else 0, axis=1).astype(str)
         df['3SsnPorch'] = df.apply(lambda x:1 if x['3SsnPorch']>0 else 0, axis=1).astype(str)
-        df['EnclosedPorch'] = df.apply(lambda x:1 if x['EnclosedPorch']>0 else 0, axis=1).astype(str)
-        df['ScreenPorch'] = df.apply(lambda x:1 if x['ScreenPorch']>0 else 0, axis=1).astype(str)
+        #df['EnclosedPorch'] = df.apply(lambda x:1 if x['EnclosedPorch']>0 else 0, axis=1).astype(str)
+        #df['ScreenPorch'] = df.apply(lambda x:1 if x['ScreenPorch']>0 else 0, axis=1).astype(str)
         
         df['BsmtQual'] = df.apply(lambda x:1 if x['BsmtQual']=='Ex' else 0, axis=1).astype(str)
         df['RoofMatl'] = df.apply(lambda x:1 if x['RoofMatl']=='WdShngl' else 0, axis=1).astype(str)
@@ -156,13 +165,13 @@ class Standarizer(TransformerMixin):
         #df['LotFrontage'] = stats.boxcox(df['LotFrontage'])[0]  
         
         scaler = RobustScaler()
-        #df['LotFrontage'] = scaler.fit_transform(df[['LotFrontage']])
+        df['LotFrontage'] = scaler.fit_transform(df[['LotFrontage']])
         #df['LotArea'] = scaler.fit_transform(df[['LotArea']])
         #df['GrLivArea'] = scaler.fit_transform(df[['GrLivArea']])        
         
-        #df['BsmtUnfSF'] = scaler.fit_transform(df[['BsmtUnfSF']])
-        #df['TotalBsmtSF'] = scaler.fit_transform(df[['TotalBsmtSF']])
-        #df['BsmtFinSF1'] = scaler.fit_transform(df[['BsmtFinSF1']])
+        df['BsmtUnfSF'] = scaler.fit_transform(df[['BsmtUnfSF']])
+        df['TotalBsmtSF'] = scaler.fit_transform(df[['TotalBsmtSF']])
+        df['BsmtFinSF1'] = scaler.fit_transform(df[['BsmtFinSF1']])
         
         return df  
 
@@ -171,13 +180,13 @@ class OrdinalConverter(TransformerMixin):
         return self
     
     def transform(self, df):
-        for i in ordinal_columms:
-            label_enc = LabelEncoder() 
-            label_enc.fit(list(df[i].values)) 
-            df[i] = label_enc.transform(list(df[i].values))
+#         for i in ordinal_columms:
+#             label_enc = LabelEncoder() 
+#             label_enc.fit(list(df[i].values)) 
+#             df[i] = label_enc.transform(list(df[i].values))
     
-        #for i in ordinal_columms:
-        #    df[i] = pd.factorize(df[i])[0]+1 
+        for i in ordinal_columms:
+            df[i] = pd.factorize(df[i])[0]+1 
         
         #for i in df.columns:
         #    if(df[i].dtype==object):
@@ -193,6 +202,9 @@ class DummyMaker(TransformerMixin):
         #df = pd.get_dummies(data = df, columns = onehot_categorical_columns)
         #df = pd.get_dummies(data = df, columns = ['BsmtQual','RoofMatl','neighbor'])
         df = pd.get_dummies(df)
+        
+        #df.drop(['Street_Grvl'],axis=1, inplace=True)
+        #df.drop(['PoolQC_0','SaleCondition_0','SaleType_0','FireplaceQu_0','KitchenQual_0','Condition2_0','ExterQual_0','Heating_0','HeatingQC_0','porch_0','PoolArea_0','MiscVal_0','3SsnPorch_0','EnclosedPorch_0','ScreenPorch_0','BsmtQual_0','RoofMatl_0'], axis=1, inplace=True)
         return df
     
 class Featuredropper(TransformerMixin):
@@ -206,6 +218,7 @@ class Featuredropper(TransformerMixin):
         #df.drop(custom_categorical_columns, axis=1, inplace=True)
         #,'Neighborhood','OpenPorchSF','EnclosedPorch','3SsnPorch','ScreenPorch'
         df.drop(['BsmtFinSF2','2ndFlrSF','LowQualFinSF','OpenPorchSF'], axis=1, inplace=True)
+                          
         return df   
     
 def pre_processing(train_df, result_df, test_df):
@@ -232,5 +245,9 @@ def pre_processing(train_df, result_df, test_df):
     train_df = all_df.iloc[:train_length]
     test_df = all_df.iloc[train_length:]
     result_df = np.log1p(result_df)
+    
+    train_df.reset_index(drop=True)
+    result_df.reset_index(drop=True)
+    test_df.reset_index(drop=True)
     
     return train_df, result_df, test_df
