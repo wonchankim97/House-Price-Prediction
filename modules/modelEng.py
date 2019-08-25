@@ -36,6 +36,16 @@ def get_param(model):
                  'epsilon': [0.05,0.1, 0.2],
                  'kernel':['rbf']}
         return cv, n_jobs, verbose, scoring, params
+    elif class_name == 'GradientBoostingRegressor':
+        params = {'n_estimators':[3000],
+                  'learning_rate':[0.01],
+                  'max_depth':[3,4],
+                  'max_features':['sqrt'],
+                  'min_samples_leaf':[15,20],
+                  'min_samples_split':[3,5],
+                  'loss':['huber'],
+                  'random_state':[45,50]}
+        return cv, n_jobs, verbose, scoring, params
     elif class_name == 'XGBRegressor':
         params = {'learning_rate': [0.01],
                  'n_estimators': [3500],

@@ -26,8 +26,8 @@ n_drop_feature = ['EnclosedPorch','3SsnPorch','PoolArea','MiscVal']
 # categorical variable chi^2 p-value >0.05
 c_drop_feature = ['MSSubClass','Alley','LandContour','Utilities','LandSlope','Condition1','BldgType','HouseStyle','RoofStyle','Exterior1st','Exterior2nd','BsmtFinType1','BsmtFinType2','Functional','GarageCond','PavedDrive','Fence','MiscFeature','OpenPorchSF','ScreenPorch','Neighborhood']
 
-# to ordinal columns
-ordinal_columms = ['YrSold', 'MoSold']
+# to numerical columns
+to_numerical_columms = ['YrSold', 'MoSold']
 
 neighbor = [['MeadowV','IDOTRR','BrDale','BrkSide','Edwards','OldTown','Sawyer','Blueste','SWISU','NPkVill','NAmes','Mitchel'],['SawyerW','NWAmes','Gilbert','Blmngtn','CollgCr','Crawfor','ClearCr','Somerst','Veenker','Timber'],['StoneBr','NridgHt','NoRidge']]
 
@@ -60,7 +60,7 @@ class NullFiller(TransformerMixin):
 
         # Kisoo
         df.FireplaceQu.fillna('NA',inplace=True) # without Fireplace, there is no FireplaceQu.
-        df.Electrical.fillna('SBrkr',inplace=True) # since Utility column, there is electricity obviously, so it filled with most common Electrical type 'SBrkr'
+        df.Electrical.fillna(df['Electrical'].mode()[0],inplace=True) # since Utility column, there is electricity obviously, so it filled with most common Electrical type 'SBrkr'
 
         # Wonchan
         # Feature Engineering for Time Series Columns
@@ -162,7 +162,7 @@ class Imputator(TransformerMixin):
         df['neighbor'] = [str([i for i,n in enumerate(neighbor) if x in n][0]) for x in df.Neighborhood]
         
         #df['poolExist'] = df['PoolArea'].apply(lambda x: 1 if x > 0 else 0)
-        df['2stories'] = df['2ndFlrSF'].apply(lambda x: 1 if x > 0 else 0)
+        #df['2stories'] = df['2ndFlrSF'].apply(lambda x: 1 if x > 0 else 0)
         #df['garageExist'] = df['GarageArea'].apply(lambda x: 1 if x > 0 else 0)
         #df['bsmtExist'] = df['TotalBsmtSF'].apply(lambda x: 1 if x > 0 else 0)
         #df['fireplaceExist'] = df['Fireplaces'].apply(lambda x: 1 if x > 0 else 0)
@@ -177,8 +177,8 @@ class Standarizer(TransformerMixin):
         skewed = [columns[i] for i,v in enumerate(stats.skew(df.loc[:,columns])) if v>0.7]
         for i in skewed:
             if min(df[i])==0:
-                df[i] = df[i]+1
-            df[i] = special.boxcox1p(df[i], 0.15)
+                df[i] = df[i]+10
+            df[i] = special.boxcox1p(df[i], boxcox_normmax(df[i] + 1))
         #df['1stFlrSF'] = stats.boxcox(df['1stFlrSF'])[0]
         #df['GrLivArea'] = stats.boxcox(df['GrLivArea'])[0]
         #df['LotArea'] = stats.boxcox(df['LotArea'])[0]
@@ -200,12 +200,8 @@ class NumericConverter(TransformerMixin):
         return self
     
     def transform(self, df):
-#         for i in ordinal_columms:
-#             label_enc = LabelEncoder() 
-#             label_enc.fit(list(df[i].values)) 
-#             df[i] = label_enc.transform(list(df[i].values))
     
-        for i in ordinal_columms:
+        for i in to_numerical_columms:
             df[i] = pd.factorize(df[i])[0]+1 
         
         #for i in df.columns:
@@ -218,6 +214,11 @@ class DummyMaker(TransformerMixin):
         return self
     
     def transform(self, df):
+#         for i in ordinal_columms:
+#             label_enc = LabelEncoder() 
+#             label_enc.fit(list(df[i].values)) 
+#             df[i] = label_enc.transform(list(df[i].values))
+
         #df = pd.get_dummies(data = df, columns = [x for x in categorical_columns if x not in custom_categorical_columns])
         #df = pd.get_dummies(data = df, columns = onehot_categorical_columns)
         #df = pd.get_dummies(data = df, columns = ['BsmtQual','RoofMatl','neighbor'])
@@ -238,6 +239,7 @@ class Featuredropper(TransformerMixin):
         #df.drop(custom_categorical_columns, axis=1, inplace=True)
         #,'Neighborhood','OpenPorchSF','EnclosedPorch','3SsnPorch','ScreenPorch'
         df.drop(['BsmtFinSF1','BsmtFinSF2','1stFlrSF','2ndFlrSF'], axis=1, inplace=True)
+        df.drop(['Utilities', 'Street', 'PoolQC',], axis=1, inplace=True)
         #df.drop(['FullBath','HalfBath','BsmtFullBath','BsmtHalfBath'], axis=1, inplace=True)
                           
         return df   
