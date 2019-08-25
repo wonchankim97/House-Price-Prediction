@@ -14,7 +14,7 @@ def get_param(model):
     class_name = type(model).__name__ 
     
     if class_name == 'ElasticNet':        
-        params = {'alpha': [0.0003, 0.0004, 0.0005],
+        params = {'alpha': [0.03, 0.0004, 1.0005],
                   'l1_ratio': [0.9, 0.95, 0.99, 1],
                   'max_iter': [10000]}
         return cv, n_jobs, verbose, scoring, params
@@ -24,7 +24,7 @@ def get_param(model):
                   'n_estimators': [700,1000,1460]}
         return cv, n_jobs, verbose, scoring, params
     elif class_name == 'Lasso':
-        params = {'alpha': [0.0005],
+        params = {'alpha': [0.03, 0.0004, 1.0005],
                  "normalize": [False]}
         return cv, n_jobs, verbose, scoring, params
     elif class_name == 'Ridge':
@@ -34,6 +34,7 @@ def get_param(model):
         params = {'gamma': ['scale'],
                  'C': [10000],
                  'epsilon': [0.1]}
+        #svr = SVR(epsilon = 1e-4, gamma=1)
         return cv, n_jobs, verbose, scoring, params
     elif class_name == 'XGBRegressor':
         params = {'learning_rate': [0.05],
