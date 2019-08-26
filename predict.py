@@ -4,7 +4,7 @@ sys.path.append('../')
 import pandas as pd
 import numpy as np
 from mlxtend.regressor import StackingRegressor
-from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import Lasso, Ridge, ElasticNet
 from sklearn.svm import SVR
 import xgboost as xgb
@@ -48,14 +48,13 @@ lasso = grid_search(train_X, train_Y, Lasso())
 ridge = grid_search(train_X, train_Y, Ridge())
 #random_forest = grid_search(train_X, train_Y, RandomForestRegressor())
 support_vector_regressor = grid_search(train_X, train_Y, SVR())
-gradient_boost_regressor = grid_search(train_X, train_Y, GradientBoostingRegressor())
 XGBoost = grid_search(train_X, train_Y, xgb.XGBRegressor())
-light_GBM = grid_search(train_X, train_Y, lgb.LGBMRegressor())
+#light_GBM = grid_search(train_X, train_Y, lgb.LGBMRegressor())
 
 stacked_regression = StackingRegressor(
         #regressors=[elastic_net, lasso, ridge, random_forest, XGBoost, light_GBM],
-        regressors=[elastic_net, lasso, ridge,gradient_boost_regressor,XGBoost,light_GBM],
-        meta_regressor=gradient_boost_regressor
+        regressors=[elastic_net, lasso, ridge, support_vector_regressor, XGBoost],
+        meta_regressor=support_vector_regressor
 )
 
 stacked_regression.fit(train_X, train_Y)
@@ -63,14 +62,13 @@ stacked_regression.fit(train_X, train_Y)
 stacked = stacked_regression.predict(test_X)
 
 ensembled = np.expm1((0.2 * elastic_net.predict(test_X)) +
-                     (0.1 * lasso.predict(test_X)) +
-                     #(0.1 * ridge.predict(test_X)) +
+                     (0.2 * lasso.predict(test_X)) +
+                     (0.1 * ridge.predict(test_X)) +
                      #(0.05 * random_forest.predict(test_X)) +
                      (0.1 * support_vector_regressor.predict(test_X)) +
-                     (0.1 * gradient_boost_regressor.predict(test_X)) +
-                     (0.1 * XGBoost.predict(test_X)) +
+                     (0.2 * XGBoost.predict(test_X)) +
                      #(0.2 * light_GBM.predict(test_X)) +
-                     (0.3 * stacked))
+                     (0.2 * stacked))
 
 
 print(stacked_regression.score(train_X, train_Y))
