@@ -52,6 +52,14 @@ def get_param(model):
                   'max_bin' : [80],                  
                   'refit':[True]}
         return cv, n_jobs, verbose, scoring, params
+#     elif class_name == 'AdaBoostRegressor':
+#         params = {'objective':['regression'],
+#                   'num_leave' : [1],
+#                   'learning_rate' : [0.05],
+#                   'n_estimators':[3000],
+#                   'max_bin' : [80],                  
+#                   'refit':[True]}
+#         return cv, n_jobs, verbose, scoring, params
 
 def grid_search(train_X, train_Y, model):
     cv, n_jobs, verbose, scoring, params = get_param(model)

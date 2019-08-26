@@ -40,7 +40,7 @@ class NullFiller(TransformerMixin):
         df['GarageYrBltImputed'] = np.where(df['GarageYrBlt'].isnull(), 1, 0)
 
         # impute the missing years with the value of the year built plus the mean of the diff of year built and garageyrbuilt
-        aveDiff = round(np.mean(df['GarageYrBlt']-df['YearBuilt']))
+        aveDiff = round(np.mean(df[df['GarageYrBlt']-df['YearBuilt'] > 0]['GarageYrBlt']-df[df['GarageYrBlt']-df['YearBuilt'] > 0]['YearBuilt']))
         df['GarageYrBlt'].fillna(df['YearBuilt'] + aveDiff,inplace=True)
         
         # added for test data
@@ -64,7 +64,21 @@ class Imputator(TransformerMixin):
         return self
     
     def transform(self, df):
-        df['GarageYrBltImputed'] = np.where(df['GarageYrBlt'].isnull(), 1, 0)
+        columns = [n for n in df.columns if (
+            (df[n].dtype == int) |
+            (df[n].dtype == float)) & (df[n].nunique()>100)]
+        skewed = [columns[i] for i,v in
+                  enumerate(stats.skew(df.loc[:,columns])) if v>0.7]
+        for i in skewed:
+            if min(df[i])==0:
+                df[i] = df[i]+1
+            df[i] = special.boxcox1p(df[i], 0.15)
+        
+        scaler = RobustScaler()
+        df['LotFrontage'] = scaler.fit_transform(df[['LotFrontage']])     
+        df['BsmtUnfSF'] = scaler.fit_transform(df[['BsmtUnfSF']])
+        df['TotalBsmtSF'] = scaler.fit_transform(df[['TotalBsmtSF']])
+        df['BsmtFinSF1'] = scaler.fit_transform(df[['BsmtFinSF1']])
         
         return df
     
