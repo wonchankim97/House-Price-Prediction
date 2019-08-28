@@ -31,9 +31,9 @@ def get_param(model):
         params = {'alpha': [1,2,3,4,5,6,7,8]}
         return cv, n_jobs, verbose, scoring, params
     elif class_name == 'SVR':
-        params = {'gamma': [1e-08, 2e-08, 3e-08],
-                 'C': [80000,90000],
-                 'epsilon': [0.05,0.1, 0.2],
+        params = {'gamma': [1e-06, 1e-07, 1e-08, 2e-08],
+                 'C': [70000,80000],
+                 'epsilon': [0.1, 0.2],
                  'kernel':['rbf']}
         return cv, n_jobs, verbose, scoring, params
     elif class_name == 'XGBRegressor':

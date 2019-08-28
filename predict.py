@@ -4,7 +4,7 @@ sys.path.append('../')
 import pandas as pd
 import numpy as np
 from mlxtend.regressor import StackingRegressor
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 from sklearn.linear_model import Lasso, Ridge, ElasticNet
 from sklearn.svm import SVR
 import xgboost as xgb
@@ -48,12 +48,12 @@ lasso = grid_search(train_X, train_Y, Lasso())
 ridge = grid_search(train_X, train_Y, Ridge())
 #random_forest = grid_search(train_X, train_Y, RandomForestRegressor())
 support_vector_regressor = grid_search(train_X, train_Y, SVR())
+#gradient_boost_regressor = grid_search(train_X, train_Y, GradientBoostingRegressor())
 XGBoost = grid_search(train_X, train_Y, xgb.XGBRegressor())
-#light_GBM = grid_search(train_X, train_Y, lgb.LGBMRegressor())
+light_GBM = grid_search(train_X, train_Y, lgb.LGBMRegressor())
 
 stacked_regression = StackingRegressor(
-        #regressors=[elastic_net, lasso, ridge, random_forest, XGBoost, light_GBM],
-        regressors=[elastic_net, lasso, ridge,support_vector_regressor,XGBoost],
+        regressors=[elastic_net, lasso, ridge, support_vector_regressor, XGBoost, light_GBM],
         meta_regressor=support_vector_regressor
 )
 
@@ -61,57 +61,20 @@ stacked_regression.fit(train_X, train_Y)
 
 stacked = stacked_regression.predict(test_X)
 
-ensembled = np.expm1((0.2 * elastic_net.predict(test_X)) +
-                     (0.1 * lasso.predict(test_X)) +
+ensembled = np.expm1((0.1 * elastic_net.predict(test_X)) +
+                     (0.2 * lasso.predict(test_X)) +
                      (0.1 * ridge.predict(test_X)) +
-                     #(0.05 * random_forest.predict(test_X)) +
-                     (0.3 * support_vector_regressor.predict(test_X)) +
-                     #(0.2 * XGBoost.predict(test_X)) +
-                     #(0.2 * light_GBM.predict(test_X)) +
-                     (0.3 * stacked))
+                     (0.1 * support_vector_regressor.predict(test_X)) +
+                     (0.2 * XGBoost.predict(test_X)) +
+                     (0.1 * light_GBM.predict(test_X)) +
+                     (0.2 * stacked))
 
 
 print(stacked_regression.score(train_X, train_Y))
 
-### for testing ###
-'''
-stacked_regression.fit(train_X, train_Y)
-
-stacked = stacked_regression.predict(train_X)
-
-ensembled = np.expm1((0.2 * elastic_net.predict(train_X)) +
-                     (0.2 * lasso.predict(train_X)) +
-                     (0.1 * ridge.predict(train_X)) +
-                     #(0.05 * random_forest.predict(train_X)) +
-                     (0.1 * support_vector_regressor.predict(train_X)) +
-                     (0.2 * XGBoost.predict(train_X)) +
-                     #(0.2 * light_GBM.predict(train_X)) +
-                     (0.2 * stacked))
-
-RMSE = np.mean((ensembled - test_Y)**2)**(1/2)
-print('Score : ' + str(RMSE))
-
-predict = pd.DataFrame({
-    'Id':train_X.index,
-    'SalePrice':ensembled
-})
-predict.to_csv('data/predict.csv', index=False)
-'''
-###################
-
-
-
 """
 Export submission data
 """
-
-#df = pd.DataFrame({"price": ensembled})
-#q1 = df["price"].quantile(0.0042)
-#q2 = df["price"].quantile(0.99)
-
-#df["price"] = df["price"].apply(lambda x: x if x > q1 else x * 0.77)
-#df["price"] = df["price"].apply(lambda x: x if x < q2 else x * 1.1)
-
 submission = pd.DataFrame({
     'Id':test_X.index + (len(train_X_bf) - len(train_X) + 1),
     'SalePrice':ensembled
