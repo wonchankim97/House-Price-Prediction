@@ -1,0 +1,21 @@
+categorical:
+'Neighborhood','MSSubClass','MSZoning','Street','Alley','LotShape','LandContour','Utilities','LotConfig','LandSlope','Condition1','Condition2','BldgType','HouseStyle','RoofStyle','RoofMatl','Exterior1st','Exterior2nd','MasVnrType','ExterQual','ExterCond','Foundation','BsmtQual','BsmtCond','BsmtExposure','BsmtFinType1','BsmtFinType2','Heating','HeatingQC','CentralAir','Electrical','KitchenQual','Functional','FireplaceQu','GarageType','GarageFinish','GarageQual','GarageCond','PavedDrive','PoolQC','Fence','MiscFeature','SaleType','SaleCondition','GarageYrBltImputed'
+
+numeric:
+'LotFrontage','LotArea','MasVnrArea','BsmtFinSF1','BsmtFinSF2','BsmtUnfSF','TotalBsmtSF','1stFlrSF','2ndFlrSF','LowQualFinSF','GrLivArea','WoodDeckSF','OpenPorchSF','EnclosedPorch','3SsnPorch','ScreenPorch','PoolArea','MiscVal','SalePrice'
+
+Both possible:
+'OverallQual','OverallCond','BsmtFullBath','BsmtHalfBath','FullBath','HalfBath','BedroomAbvGr','KitchenAbvGr','TotRmsAbvGrd','Fireplaces','GarageCars','GarageArea'
+
+timeseries:
+'YearBuilt','YearRemodAdd','GarageYrBlt','MoSold','YrSold'
+
+
+'SalePrice','LotFrontage','LotArea','TotalBsmtSF','BsmtUnfSF','1stFlrSF','GrLivArea'
+
+#categorical
+'Neighborhood','MSZoning','Street','LotShape','LotConfig','MasVnrType','ExterQual','ExterCond','Foundation','BsmtQual','BsmtCond','BsmtExposure','Heating','CentralAir','KitchenQual','FireplaceQu','GarageFinish','SaleType','SaleCondition,'GarageYrBltImputed'
+#numeric
+'OpenPorchSF','MasVnrArea','WoodDeckSF','BsmtFinSF1','2ndFlrSF','TotalBsmtSF'
+
+'BsmtFinSF1','BsmtUnfSF','TotalBsmtSF','BsmtFullBath','BsmtHalfBath','GarageCars','GarageArea'
