@@ -32,6 +32,7 @@ Finally, in order to evaluate the model's performance, there are several segment
 
 ## Authors
 
-* **Alyssa Wei** - *Initial work* - [Alyssa Wei](https://github.com/AlyssaWei)
+* **Alyssa Wei** - [Alyssa Wei](https://github.com/AlyssaWei)
 * **Hyelee Lee** - [Hyelee](https://github.com/hayley01145553)
 * **Kisoo Cho** - [Necronia](https://github.com/necronia)
+* **Wonchan Kim** - [Wonchan Kim](https://github.com/wonchankim97)
