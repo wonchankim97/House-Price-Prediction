@@ -2,7 +2,7 @@
 
 This repository was a project aimed at predicting sale prices of houses in Ames, Iowa from the years of 2006-2010. The dataset was supplied by [Kaggle](https://www.kaggle.com/c/house-prices-advanced-regression-techniques/data). By using different models including stacked regression to build an ensembled final model, we were able to achieve a score of 0.11591 which placed us at a rank of 640 on the Kaggle leaderboard at the time. Feel free to clone this to your own machine and improving on our methods.
 
-Take a look at our blog for more details: [Which house shall we invest in?](https://nycdatascience.com/blog/student-works/which-real-estate-shall-we-invest-in/)
+Take a look at our blog for more details: [Which house shall we invest in?](https://nycdatascience.com/blog/student-works/which-house-shall-we-invest-in/)
 
 ## Getting Started
 
